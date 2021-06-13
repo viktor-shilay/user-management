@@ -9,5 +9,5 @@ ADMIN username: viktorshilay password: qwerty007
 + Clone this project
 + Run the application
 
-## How to use(2 method of 2)
+## How to use (2 method of 2)
 + Run docker-compose.yml in Docker
