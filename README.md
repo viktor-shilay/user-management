@@ -8,6 +8,8 @@ ADMIN username: viktorshilay password: qwerty007
 + Run script.sql
 + Clone this project
 + Run the application
++ Open https://localhost:8080 in your browser
 
 ## How to use (2 method of 2)
 + Run docker-compose.yml in Docker
++ Open https://localhost:8080 in your browser
