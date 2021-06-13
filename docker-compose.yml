@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+
+  my-postgres:
+    hostname: my-postgres
+    container_name: my-postgres
+    image: viktorshilay/my-postgres
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=user_management
+    ports:
+      - "5432:5432"
+
+  my-app:
+    hostname: my-app
+    container_name: my-app
+    image: viktorshilay/my-app
+    restart: on-failure
+    depends_on:
+      - my-postgres
+    ports:
+      - "8080:8080"
