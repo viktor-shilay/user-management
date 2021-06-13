@@ -1,7 +1,7 @@
 package by.shilay.app.usermanagement.util;
 
 import by.shilay.app.usermanagement.model.UserAccount;
-import by.shilay.app.usermanagement.service.api.UserAccountService;
+import by.shilay.app.usermanagement.repository.UserAccountRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
@@ -9,10 +9,10 @@ import org.springframework.validation.Validator;
 @Component
 public class UserAccountValidator implements Validator {
 
-    private final UserAccountService userAccountService;
+    private final UserAccountRepository userAccountRepository;
 
-    public UserAccountValidator(UserAccountService userAccountService) {
-        this.userAccountService = userAccountService;
+    public UserAccountValidator(UserAccountRepository userAccountRepository) {
+        this.userAccountRepository = userAccountRepository;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class UserAccountValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         UserAccount userAccount = (UserAccount) target;
-        if (userAccountService.findByUsername(userAccount.getUsername()) != null) {
+        if (userAccountRepository.existsUserAccountByUsername(userAccount.getUsername())) {
             errors.rejectValue("username", "", "This username is already taken!");
         }
     }

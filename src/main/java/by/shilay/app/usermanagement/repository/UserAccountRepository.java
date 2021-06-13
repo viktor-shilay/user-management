@@ -10,5 +10,7 @@ import org.springframework.stereotype.Repository;
 public interface UserAccountRepository extends JpaRepository<UserAccount, Long> {
     Page<UserAccount> findAll(Pageable pageable);
 
+    boolean existsUserAccountByUsername(String username);
+
     UserAccount findUserAccountByUsername(String username);
 }

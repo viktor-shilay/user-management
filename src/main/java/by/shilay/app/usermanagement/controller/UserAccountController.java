@@ -1,5 +1,6 @@
 package by.shilay.app.usermanagement.controller;
 
+import by.shilay.app.usermanagement.exception.UserAccountNotFoundException;
 import by.shilay.app.usermanagement.model.UserAccount;
 import by.shilay.app.usermanagement.service.api.UserAccountService;
 import by.shilay.app.usermanagement.util.ErrorThrower;
@@ -14,10 +15,12 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 
 @Controller
+@RequestMapping("/user")
 public class UserAccountController {
 
     private final UserAccountService userAccountService;
@@ -29,7 +32,7 @@ public class UserAccountController {
         this.userAccountValidator = userAccountValidator;
     }
 
-    @GetMapping("/user")
+    @GetMapping
     public String findAll(Model model, @PageableDefault(sort = {"id"}, value = 5) Pageable pageable) {
 
         Page<UserAccount> page = userAccountService.findAll(pageable);
@@ -40,18 +43,18 @@ public class UserAccountController {
         return "list";
     }
 
-    @GetMapping("/user/{id}")
-    public String findOne(@PathVariable("id") Long id, Model model) {
+    @GetMapping("/{id}")
+    public String findOne(@PathVariable("id") Long id, Model model) throws UserAccountNotFoundException {
         model.addAttribute("userAccount", userAccountService.findOne(id));
         return "view";
     }
 
-    @GetMapping("/user/new")
+    @GetMapping("/new")
     public String create() {
         return "new";
     }
 
-    @PostMapping("/user/new")
+    @PostMapping("/new")
     public String create(@Valid UserAccount userAccount, BindingResult bindingResult, Model model) {
         userAccountValidator.validate(userAccount, bindingResult);
         if (bindingResult.hasErrors()) {
@@ -62,15 +65,15 @@ public class UserAccountController {
         return "redirect:/user";
     }
 
-    @GetMapping("/user/{id}/edit")
-    public String update(@PathVariable("id") Long id, Model model) {
+    @GetMapping("/{id}/edit")
+    public String update(@PathVariable("id") Long id, Model model) throws UserAccountNotFoundException {
         UserAccount userAccount = userAccountService.findOne(id);
         model.addAttribute("userAccount", userAccount);
         return "edit";
     }
 
-    @PostMapping("/user/{id}/edit")
-    public String update(@PathVariable("id") Long id, @Valid UserAccount userAccount, BindingResult bindingResult, Model model) {
+    @PostMapping("/{id}/edit")
+    public String update(@PathVariable("id") Long id, @Valid UserAccount userAccount, BindingResult bindingResult, Model model) throws UserAccountNotFoundException {
         UserAccount userAccountById = userAccountService.findOne(id);
         if (!userAccount.getUsername().equals(userAccountById.getUsername())) {
             userAccountValidator.validate(userAccount, bindingResult);
@@ -84,8 +87,8 @@ public class UserAccountController {
         return "redirect:/user";
     }
 
-    @PostMapping("/user/{id}/status")
-    public String updateStatus(@PathVariable("id") Long id) {
+    @PostMapping("/{id}/status")
+    public String updateStatus(@PathVariable("id") Long id) throws UserAccountNotFoundException {
         userAccountService.updateStatus(id);
         return "redirect:/user/" + id;
     }
